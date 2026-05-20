@@ -1,0 +1,189 @@
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#eef2f7,#dfe9f3);
+}
+
+/* Navbar */
+
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#2c3e50;
+  padding:15px 20px;
+}
+
+.logo{
+  color:white;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.nav-links{
+  list-style:none;
+  display:flex;
+  gap:20px;
+}
+
+.nav-links a{
+  color:white;
+  text-decoration:none;
+  transition:0.3s;
+}
+
+.nav-links a:hover{
+  color:#6dd5fa;
+}
+
+/* Layout */
+
+.container{
+  width:90%;
+  max-width:1100px;
+  margin:30px auto;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  margin-bottom:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+
+.big{
+  font-size:35px;
+  font-weight:bold;
+}
+
+.green{
+  color:green;
+}
+
+.red{
+  color:red;
+}
+
+/* Login */
+
+.center-container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.login-card{
+  width:320px;
+}
+
+/* Forms */
+
+input,select{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border:1px solid #ccc;
+  border-radius:6px;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:6px;
+  background:#3498db;
+  color:white;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#2980b9;
+}
+
+#error{
+  color:red;
+  text-align:center;
+}
+
+/* Table */
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid #ddd;
+}
+
+th{
+  background:#f4f4f4;
+}
+
+.status-available{
+  color:green;
+  font-weight:bold;
+}
+
+.status-lost{
+  color:red;
+  font-weight:bold;
+}
+
+.delete-btn{
+  background:red;
+  padding:8px 12px;
+}
+
+.item-image{
+  width:80px;
+  height:80px;
+  object-fit:cover;
+  border-radius:8px;
+  border:2px solid #ddd;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+  .navbar{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .nav-links{
+    flex-direction:column;
+    padding:0;
+    margin-top:10px;
+  }
+
+  table,thead,tbody,th,td,tr{
+    display:block;
+  }
+
+  th{
+    display:none;
+  }
+
+  td{
+    border:none;
+    padding:10px;
+    background:white;
+    margin-bottom:10px;
+  }
+}

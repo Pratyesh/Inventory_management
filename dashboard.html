@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body onload="loadDashboard()">
+
+<nav class="navbar">
+
+  <div class="logo">InventorySys</div>
+
+  <ul class="nav-links">
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="inventory.html">Inventory</a></li>
+    <li><a href="login.html">Logout</a></li>
+  </ul>
+
+</nav>
+
+<div class="container">
+
+  <h2>Dashboard Overview</h2>
+
+  <div class="grid">
+
+    <div class="card">
+      <h3>Total Equipment</h3>
+      <p class="big" id="totalItems">0</p>
+    </div>
+
+    <div class="card">
+      <h3>Available</h3>
+      <p class="big green" id="availableItems">0</p>
+    </div>
+
+    <div class="card">
+      <h3>Lost</h3>
+      <p class="big red" id="lostItems">0</p>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
