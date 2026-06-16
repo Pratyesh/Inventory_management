@@ -1,5 +1,5 @@
 /* ============================================
-   INVENTORYSYS — Design Tokens
+   INVENTORYSYSTEM — Design Tokens
    Palette: Deep Navy · Teal · Amber accent
    ============================================ */
 
@@ -1071,4 +1071,303 @@ tbody tr:last-child td { border-bottom: none; }
   color: #fbbf24;
   margin-top: 4px;
   font-weight: 500;
+}
+
+/* ============================================
+   LIGHT / DARK THEME SYSTEM
+   ============================================ */
+
+:root,
+[data-theme="dark"] {
+  --bg-page: var(--navy-900);
+  --bg-card: rgba(15,23,41,0.75);
+  --bg-card-solid: var(--navy-700);
+  --bg-input: rgba(255,255,255,0.06);
+  --border-soft: rgba(255,255,255,0.12);
+  --text: #ffffff;
+  --text-rgb: 255,255,255;
+  --text-dim: rgba(255,255,255,0.6);
+}
+
+[data-theme="light"] {
+  --bg-page: #eef6f4;
+  --bg-card: rgba(255,255,255,0.85);
+  --bg-card-solid: #ffffff;
+  --bg-input: rgba(13,148,136,0.06);
+  --border-soft: rgba(13,148,136,0.18);
+  --text: #0f1729;
+  --text-rgb: 15,23,41;
+  --text-dim: rgba(15,23,41,0.6);
+  --navy-900: #eef6f4;
+}
+
+[data-theme="light"] body::before {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(13,148,136,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(251,191,36,0.08) 0%, transparent 55%);
+}
+
+[data-theme="light"] body { color: var(--text); }
+[data-theme="light"] .navbar { background: rgba(255,255,255,0.8); border-bottom-color: rgba(13,148,136,0.2); }
+[data-theme="light"] .nav-links a { color: rgba(15,23,41,0.6); }
+[data-theme="light"] .nav-links a:hover { color: var(--text); }
+[data-theme="light"] .card,
+[data-theme="light"] .stat-card { background: var(--bg-card); border-color: rgba(13,148,136,0.25); box-shadow: 0 8px 24px rgba(15,23,41,0.08); }
+[data-theme="light"] input,
+[data-theme="light"] select { background: var(--bg-input); border-color: var(--border-soft); color: var(--text); }
+[data-theme="light"] input::placeholder { color: rgba(15,23,41,0.35); }
+[data-theme="light"] th { color: var(--teal-500); }
+[data-theme="light"] td { color: rgba(15,23,41,0.8); }
+[data-theme="light"] select option { background: #fff; color: var(--text); }
+[data-theme="light"] .modal-card { background: #fff; }
+[data-theme="light"] .activity-item { background: rgba(13,148,136,0.05); border-color: rgba(13,148,136,0.1); }
+
+body { background: var(--bg-page); color: var(--text); }
+.card { background: var(--bg-card); }
+.stat-card { background: var(--bg-card); }
+
+/* ============================================
+   NAV RIGHT / THEME TOGGLE / USER BADGE
+   ============================================ */
+
+.navbar { flex-wrap: wrap; }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.user-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--teal-300);
+  background: rgba(13,148,136,0.12);
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1px solid rgba(13,148,136,0.25);
+}
+
+.theme-btn {
+  width: auto;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--border-soft);
+  border-radius: 50%;
+  font-size: 14px;
+  margin-top: 0;
+  line-height: 1;
+}
+
+.theme-btn:hover { transform: scale(1.1) rotate(15deg); box-shadow: none; }
+
+.theme-btn-float {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+}
+
+.login-hint {
+  margin-top: 16px;
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+/* ============================================
+   OVERDUE BANNER
+   ============================================ */
+
+.overdue-banner {
+  background: linear-gradient(90deg, rgba(251,191,36,0.18), rgba(248,113,113,0.1));
+  border-bottom: 1px solid rgba(251,191,36,0.3);
+  padding: 12px 40px;
+  font-size: 14px;
+  color: #fbbf24;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: fadeIn 0.5s ease;
+}
+
+/* ============================================
+   TOASTS
+   ============================================ */
+
+#toastWrap {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: var(--bg-card-solid);
+  border: 1px solid rgba(13,148,136,0.3);
+  color: var(--text);
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease;
+}
+
+.toast.show { transform: translateX(0); opacity: 1; }
+.toast-error { border-color: rgba(248,113,113,0.4); }
+.toast-warn  { border-color: rgba(251,191,36,0.4); }
+
+/* ============================================
+   FORM ROWS
+   ============================================ */
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-row input, .form-row select { margin: 6px 0; }
+
+/* ============================================
+   CATEGORY FILTER PILLS
+   ============================================ */
+
+.cat-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.cat-btn {
+  width: auto;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border-soft);
+  color: var(--text-dim);
+  border-radius: 100px;
+  margin-top: 0;
+}
+
+.cat-btn:hover { transform: translateY(-1px); box-shadow: none; background: rgba(13,148,136,0.15); color: var(--text); }
+.cat-btn.active { background: var(--teal-500); color: white; border-color: var(--teal-500); }
+
+/* ============================================
+   SORTABLE TABLE HEADERS
+   ============================================ */
+
+th.sortable { cursor: pointer; user-select: none; transition: var(--transition); position: relative; }
+th.sortable:hover { color: var(--teal-300); }
+th.sortable::after { content: '⇅'; margin-left: 6px; opacity: 0.3; font-size: 10px; }
+th.sortable.sort-asc::after  { content: '↑'; opacity: 1; color: var(--teal-300); }
+th.sortable.sort-desc::after { content: '↓'; opacity: 1; color: var(--teal-300); }
+
+/* ============================================
+   QUANTITY / STOCK BADGES
+   ============================================ */
+
+.qty-display { font-size: 15px; font-weight: 700; }
+.qty-avail { color: var(--green-400); }
+.qty-sep { color: var(--text-dim); margin: 0 2px; }
+.qty-total { color: var(--text-dim); }
+
+.badge-low {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fbbf24;
+  background: rgba(251,191,36,0.15);
+  padding: 2px 8px;
+  border-radius: 100px;
+  margin-top: 4px;
+}
+
+.badge-out {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--red-400);
+  background: rgba(248,113,113,0.15);
+  padding: 2px 8px;
+  border-radius: 100px;
+  margin-top: 4px;
+}
+
+.item-meta {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* ============================================
+   CONDITION BADGES
+   ============================================ */
+
+.cond-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.cond-good    { background: rgba(52,211,153,0.12); color: var(--green-400); }
+.cond-damaged { background: rgba(248,113,113,0.12); color: var(--red-400); }
+.cond-repair  { background: rgba(251,191,36,0.12); color: #fbbf24; }
+
+/* ============================================
+   EDIT BUTTON
+   ============================================ */
+
+.edit-btn {
+  background: rgba(94,234,212,0.15);
+  color: var(--teal-300);
+  border: 1px solid rgba(94,234,212,0.3);
+}
+.edit-btn:hover { background: var(--teal-400); color: var(--navy-900); box-shadow: 0 6px 18px rgba(20,184,166,0.35); transform: translateY(-2px); }
+
+/* ============================================
+   STUDENT STATS
+   ============================================ */
+
+.student-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.student-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.student-stat span {
+  display: block;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+@media (max-width: 700px) {
+  .student-stats { grid-template-columns: repeat(2, 1fr); }
+  .form-row { grid-template-columns: 1fr; }
 }

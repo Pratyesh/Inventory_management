@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login — InventorySystem</title>
+  <title>Login — InventorySys</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
+<button id="themeToggle" class="theme-btn theme-btn-float" onclick="toggleTheme()">☀️</button>
+
 <div class="center-container">
   <div class="card login-card">
-
     <span class="login-logo">◈</span>
     <h2>InventorySys</h2>
     <p class="subtitle">College Equipment Management</p>
@@ -21,12 +22,14 @@
            onkeydown="if(event.key==='Enter') login()">
 
     <button onclick="login()">Sign In</button>
-
     <p id="error"></p>
-
+    <p class="login-hint">Admin: admin / 1234 &nbsp;·&nbsp; Staff: staff / staff123</p>
   </div>
 </div>
 
 <script src="script.js"></script>
+<script>
+  document.getElementById('themeToggle').textContent = localStorage.getItem('theme')==='light' ? '🌙' : '☀️';
+</script>
 </body>
 </html>

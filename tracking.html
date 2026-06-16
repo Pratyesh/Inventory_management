@@ -15,18 +15,24 @@
     <li><a href="dashboard.html">Dashboard</a></li>
     <li><a href="inventory.html">Inventory</a></li>
     <li><a href="tracking.html" class="active">Tracking</a></li>
+    <li><a href="students.html">Students</a></li>
+    <li><a href="audit.html">Audit</a></li>
     <li><a href="login.html">Logout</a></li>
   </ul>
+  <div class="nav-right">
+    <span id="userBadge" class="user-badge"></span>
+    <button id="themeToggle" class="theme-btn" onclick="toggleTheme()">☀️</button>
+  </div>
 </nav>
 
-<div class="container">
+<div id="toastWrap"></div>
 
+<div class="container">
   <div class="page-header fade-up">
     <h2>Borrow <span>Tracking</span></h2>
     <p>Monitor who has what, when it was taken, and when it's due back</p>
   </div>
 
-  <!-- Stat row -->
   <div class="grid" style="margin-bottom:24px">
     <div class="stat-card stat-card--lost fade-up delay-1">
       <span class="stat-icon">📤</span>
@@ -45,61 +51,47 @@
     </div>
   </div>
 
-  <!-- Search -->
   <div class="card fade-up delay-1" style="margin-bottom:20px">
     <div class="search-wrap">
-      <input type="text" id="trackSearch" placeholder="Search by equipment name or student…" oninput="searchTracking()">
+      <input type="text" id="trackSearch" placeholder="Search by equipment, student name or ID…" oninput="searchTracking()">
     </div>
   </div>
 
-  <!-- Active loans -->
   <div class="card fade-up delay-2" style="margin-bottom:20px">
     <div class="section-title">Active Loans</div>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Equipment</th>
-            <th>Student</th>
-            <th>Time Taken</th>
-            <th>Borrowed On</th>
-            <th>Return By</th>
-            <th>Action</th>
+            <th>Equipment</th><th>Student</th><th>Qty</th><th>Time Taken</th>
+            <th>Borrowed On</th><th>Return By</th><th>Action</th>
           </tr>
         </thead>
         <tbody id="activeBody"></tbody>
       </table>
     </div>
     <div id="activeEmpty" class="empty-state" style="display:none">
-      <div class="empty-icon">🎉</div>
-      <p>All equipment is currently in. Nothing borrowed right now.</p>
+      <div class="empty-icon">🎉</div><p>All equipment is currently in. Nothing borrowed right now.</p>
     </div>
   </div>
 
-  <!-- History -->
   <div class="card fade-up delay-3">
     <div class="section-title">Return History</div>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Equipment</th>
-            <th>Student</th>
-            <th>Borrowed On</th>
-            <th>Due Date</th>
-            <th>Returned On</th>
-            <th>Status</th>
+            <th>Equipment</th><th>Student</th><th>Qty</th><th>Borrowed On</th>
+            <th>Due Date</th><th>Returned On</th><th>Status</th>
           </tr>
         </thead>
         <tbody id="historyBody"></tbody>
       </table>
     </div>
     <div id="historyEmpty" class="empty-state" style="display:none">
-      <div class="empty-icon">📭</div>
-      <p>No returns logged yet.</p>
+      <div class="empty-icon">📭</div><p>No returns logged yet.</p>
     </div>
   </div>
-
 </div>
 
 <script src="script.js"></script>

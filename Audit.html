@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Log — InventorySys</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body onload="loadAuditLog()">
+
+<nav class="navbar">
+  <div class="logo">InventorySys</div>
+  <ul class="nav-links">
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="inventory.html">Inventory</a></li>
+    <li><a href="tracking.html">Tracking</a></li>
+    <li><a href="students.html">Students</a></li>
+    <li><a href="audit.html" class="active">Audit</a></li>
+    <li><a href="login.html">Logout</a></li>
+  </ul>
+  <div class="nav-right">
+    <span id="userBadge" class="user-badge"></span>
+    <button id="themeToggle" class="theme-btn" onclick="toggleTheme()">☀️</button>
+  </div>
+</nav>
+
+<div id="toastWrap"></div>
+
+<div class="container">
+  <div class="page-header fade-up">
+    <h2>Audit <span>Log</span></h2>
+    <p>Full record of every add, edit, delete, borrow and return action</p>
+  </div>
+
+  <div class="card fade-up delay-1">
+    <div class="section-title">Activity History</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Action</th><th>Detail</th><th>User</th><th>Time</th></tr>
+        </thead>
+        <tbody id="auditBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+  showUserBadge();
+  document.getElementById('themeToggle').textContent = localStorage.getItem('theme')==='light' ? '🌙' : '☀️';
+</script>
+</body>
+</html>

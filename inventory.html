@@ -10,20 +10,28 @@
 <body onload="displayItems()">
 
 <nav class="navbar">
-  <div class="logo">InventorySystem</div>
+  <div class="logo">InventorySys</div>
   <ul class="nav-links">
     <li><a href="dashboard.html">Dashboard</a></li>
     <li><a href="inventory.html" class="active">Inventory</a></li>
     <li><a href="tracking.html">Tracking</a></li>
+    <li><a href="students.html">Students</a></li>
+    <li><a href="audit.html">Audit</a></li>
     <li><a href="login.html">Logout</a></li>
   </ul>
+  <div class="nav-right">
+    <span id="userBadge" class="user-badge"></span>
+    <button id="themeToggle" class="theme-btn" onclick="toggleTheme()">☀️</button>
+  </div>
 </nav>
 
-<div class="container">
+<div id="overdueBanner" class="overdue-banner" style="display:none"></div>
+<div id="toastWrap"></div>
 
+<div class="container">
   <div class="page-header fade-up">
     <h2>Equipment <span>Inventory</span></h2>
-    <p>Add, search and manage all equipment records</p>
+    <p>Add, search, filter and manage all equipment records</p>
   </div>
 
   <div class="inv-top">
@@ -31,6 +39,28 @@
       <div class="section-title">Add Equipment</div>
       <input type="text" id="itemName" placeholder="Equipment name">
       <input type="text" id="itemLocation" placeholder="Location / Room">
+
+      <div class="form-row">
+        <select id="itemCategory">
+          <option>Lab</option><option>Sports</option><option>AV</option>
+          <option>Furniture</option><option>IT</option><option selected>Other</option>
+        </select>
+        <select id="itemCondition">
+          <option>Good</option><option>Damaged</option><option>Under Repair</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label class="form-label">Quantity</label>
+          <input type="number" id="itemQuantity" value="1" min="1">
+        </div>
+        <div>
+          <label class="form-label">Low-stock alert below</label>
+          <input type="number" id="itemThreshold" value="1" min="1">
+        </div>
+      </div>
+
       <select id="itemStatus">
         <option value="Available">Available</option>
         <option value="Lost">Lost</option>
@@ -40,11 +70,30 @@
     </div>
 
     <div class="card fade-up delay-2" style="align-self:start">
-      <div class="section-title">Search Equipment</div>
+      <div class="section-title">Search &amp; Filter</div>
       <div class="search-wrap">
-        <input type="text" id="searchInput" placeholder="Search by name or location…" oninput="searchItem()">
+        <input type="text" id="searchInput" placeholder="Search by name or location…" oninput="displayItems()">
       </div>
-      <div id="searchCount" style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:10px;"></div>
+
+      <label class="form-label" style="margin-top:14px">Category</label>
+      <div class="cat-filter" id="catFilter">
+        <button class="cat-btn active" data-cat="All" onclick="setCatFilter('All')">All</button>
+        <button class="cat-btn" data-cat="Lab" onclick="setCatFilter('Lab')">Lab</button>
+        <button class="cat-btn" data-cat="Sports" onclick="setCatFilter('Sports')">Sports</button>
+        <button class="cat-btn" data-cat="AV" onclick="setCatFilter('AV')">AV</button>
+        <button class="cat-btn" data-cat="Furniture" onclick="setCatFilter('Furniture')">Furniture</button>
+        <button class="cat-btn" data-cat="IT" onclick="setCatFilter('IT')">IT</button>
+        <button class="cat-btn" data-cat="Other" onclick="setCatFilter('Other')">Other</button>
+      </div>
+
+      <label class="form-label" style="margin-top:14px">Status</label>
+      <select id="statusFilter" onchange="setStatusFilter(this.value)">
+        <option value="All">All</option>
+        <option value="Available">Available</option>
+        <option value="Lost">Borrowed / Lost</option>
+      </select>
+
+      <div id="searchCount" style="font-size:12px;color:rgba(var(--text-rgb),0.4);margin-top:10px;"></div>
     </div>
   </div>
 
@@ -55,9 +104,11 @@
         <thead>
           <tr>
             <th>Image</th>
-            <th>Name</th>
-            <th>Location</th>
-            <th>Status</th>
+            <th class="sortable" data-sort="name" onclick="setSort('name')">Name</th>
+            <th class="sortable" data-sort="location" onclick="setSort('location')">Location</th>
+            <th class="sortable" data-sort="available" onclick="setSort('available')">Qty</th>
+            <th>Condition</th>
+            <th class="sortable" data-sort="status" onclick="setSort('status')">Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -69,7 +120,6 @@
       <p>No equipment found. Add some above!</p>
     </div>
   </div>
-
 </div>
 
 <!-- Borrow Modal -->
@@ -79,14 +129,19 @@
       <div class="section-title" style="margin-bottom:0">Register Borrow</div>
       <button class="modal-close" onclick="closeBorrowModal()">✕</button>
     </div>
-
-    <input type="hidden" id="borrowItemIndex">
+    <input type="hidden" id="borrowItemId">
 
     <label class="modal-label">Student Name</label>
     <input type="text" id="borrowStudent" placeholder="Full name of student">
 
+    <label class="modal-label">Student ID / Roll No.</label>
+    <input type="text" id="borrowStudentId" placeholder="e.g. CS21045">
+
     <label class="modal-label">Time Taken</label>
     <input type="text" id="borrowTime" placeholder="e.g. 10:30 AM or 2 hours">
+
+    <label class="modal-label">Quantity <span id="borrowQtyMax" style="opacity:0.5;font-weight:400"></span></label>
+    <input type="number" id="borrowQty" value="1" min="1">
 
     <label class="modal-label">Return By Date</label>
     <input type="date" id="borrowReturnDate">
@@ -95,7 +150,63 @@
 
     <div style="display:flex;gap:12px;margin-top:8px">
       <button onclick="confirmBorrow()" style="flex:1">Confirm Borrow</button>
-      <button onclick="closeBorrowModal()" style="flex:1;background:rgba(255,255,255,0.08);color:white">Cancel</button>
+      <button onclick="closeBorrowModal()" style="flex:1;background:rgba(var(--text-rgb),0.08);color:var(--text)">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-card fade-up">
+    <div class="modal-header">
+      <div class="section-title" style="margin-bottom:0">Edit Equipment</div>
+      <button class="modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <input type="hidden" id="editItemId">
+
+    <label class="modal-label">Name</label>
+    <input type="text" id="editName">
+    <label class="modal-label">Location</label>
+    <input type="text" id="editLocation">
+
+    <div class="form-row">
+      <div>
+        <label class="modal-label">Category</label>
+        <select id="editCategory">
+          <option>Lab</option><option>Sports</option><option>AV</option>
+          <option>Furniture</option><option>IT</option><option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label class="modal-label">Condition</label>
+        <select id="editCondition">
+          <option>Good</option><option>Damaged</option><option>Under Repair</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label class="modal-label">Total Quantity</label>
+        <input type="number" id="editQuantity" min="1">
+      </div>
+      <div>
+        <label class="modal-label">Low-stock threshold</label>
+        <input type="number" id="editThreshold" min="1">
+      </div>
+    </div>
+
+    <label class="modal-label">Status</label>
+    <select id="editStatus">
+      <option value="Available">Available</option>
+      <option value="Lost">Lost</option>
+    </select>
+
+    <p id="editError" style="color:#f87171;font-size:13px;min-height:20px;margin-top:4px"></p>
+
+    <div style="display:flex;gap:12px;margin-top:8px">
+      <button onclick="saveEdit()" style="flex:1">Save Changes</button>
+      <button onclick="closeEditModal()" style="flex:1;background:rgba(var(--text-rgb),0.08);color:var(--text)">Cancel</button>
     </div>
   </div>
 </div>
