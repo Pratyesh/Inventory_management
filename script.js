@@ -74,7 +74,18 @@ function showUserBadge() {
 }
 
 // ── Storage ───────────────────────────────────
-function getItems()    { return JSON.parse(localStorage.getItem('inventory'))   || []; }
+function getItems() {
+  const items = JSON.parse(localStorage.getItem('inventory')) || [];
+  let repaired = false;
+  items.forEach(item => {
+    if (item.id === undefined || item.id === null) {
+      item.id = Date.now() + Math.floor(Math.random() * 1000000);
+      repaired = true;
+    }
+  });
+  if (repaired) saveItems(items);
+  return items;
+}
 function saveItems(d)  { localStorage.setItem('inventory',   JSON.stringify(d)); }
 function getLogs()     { return JSON.parse(localStorage.getItem('borrowLogs'))  || []; }
 function saveLogs(d)   { localStorage.setItem('borrowLogs',  JSON.stringify(d)); }
@@ -166,14 +177,17 @@ function displayItems() {
   items.forEach((item, index) => {
     const tr  = document.createElement('tr');
     tr.style.animationDelay = `${index*0.03}s`;
+    const available  = item.available !== undefined ? item.available : (item.quantity || 1);
+    const quantity    = item.quantity !== undefined ? item.quantity : 1;
+    const threshold   = item.threshold !== undefined ? item.threshold : 1;
     const activelog  = getActiveBorrow(item.id);
-    const lowStock   = item.available <= item.threshold && item.available > 0;
-    const outOfStock = item.available === 0;
+    const lowStock   = available <= threshold && available > 0;
+    const outOfStock = available === 0;
     const condClass  = { 'Good':'cond-good','Damaged':'cond-damaged','Under Repair':'cond-repair' }[item.condition]||'';
     const borrowInfo = activelog ? `<div class="borrow-mini">👤 ${activelog.student} · due ${fmtDate(activelog.returnDate)}</div>` : '';
     const lowBadge   = lowStock   ? `<span class="badge-low">⚠ Low Stock</span>` : '';
     const outBadge   = outOfStock ? `<span class="badge-out">Out of Stock</span>` : '';
-    const canBorrow  = item.available > 0;
+    const canBorrow  = available > 0;
     const canEdit    = isAdmin();
 
     tr.innerHTML = `
@@ -186,9 +200,9 @@ function displayItems() {
       <td style="color:rgba(var(--text-rgb),0.6)">${item.location}</td>
       <td>
         <div class="qty-display">
-          <span class="qty-avail">${item.available}</span>
+          <span class="qty-avail">${available}</span>
           <span class="qty-sep">/</span>
-          <span class="qty-total">${item.quantity}</span>
+          <span class="qty-total">${quantity}</span>
         </div>
         <div style="font-size:11px;color:rgba(var(--text-rgb),0.4);margin-top:2px">available</div>
       </td>
@@ -199,10 +213,10 @@ function displayItems() {
         </span>
       </td>
       <td style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-        ${canBorrow ? `<button class="action-btn borrow-btn" onclick="openBorrowModal(${items.indexOf(item)})">Borrow</button>` : ''}
-        ${activelog  ? `<button class="action-btn return-btn" onclick="returnItem('${item.id}')">Return</button>` : ''}
-        ${canEdit    ? `<button class="action-btn edit-btn" onclick="openEditModal('${item.id}')">Edit</button>` : ''}
-        <button class="delete-btn" onclick="confirmDelete('${item.id}')">Delete</button>
+        ${canBorrow ? `<button class="action-btn borrow-btn" onclick="openBorrowModal(${index})">Borrow</button>` : ''}
+        ${activelog  ? `<button class="action-btn return-btn" onclick="returnItem(${item.id})">Return</button>` : ''}
+        ${canEdit    ? `<button class="action-btn edit-btn" onclick="openEditModal(${item.id})">Edit</button>` : ''}
+        <button class="delete-btn" onclick="confirmDelete(${item.id})">Delete</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -310,15 +324,15 @@ function openBorrowModal(visibleIndex) {
   let items = getFilteredItems();
   const item = items[visibleIndex];
   if (!item) return;
+  const available = item.available !== undefined ? item.available : (item.quantity || 1);
 
-  // Check borrow limit for student
   document.getElementById('borrowItemId').value     = item.id;
   document.getElementById('borrowStudent').value    = '';
   document.getElementById('borrowStudentId').value  = '';
   document.getElementById('borrowTime').value       = '';
   document.getElementById('borrowQty').value        = 1;
-  document.getElementById('borrowQty').max          = item.available;
-  document.getElementById('borrowQtyMax').textContent = `max ${item.available}`;
+  document.getElementById('borrowQty').max          = available;
+  document.getElementById('borrowQtyMax').textContent = `max ${available}`;
   const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
   document.getElementById('borrowReturnDate').value = tomorrow.toISOString().split('T')[0];
   document.getElementById('modalError').textContent = '';
@@ -423,7 +437,7 @@ function checkOverdueAlert() {
   const banner  = document.getElementById('overdueBanner');
   if (!banner) return;
   if (overdue.length > 0) {
-    banner.innerHTML = `⏰ <strong>${overdue.length} item${overdue.length>1?'s are':' is'} overdue!</strong> <a href="tracking.html" style="color:#fbbf24;text-decoration:underline">View in Tracking →</a>`;
+    banner.innerHTML = `⏰ <strong>${overdue.length} item${overdue.length>1?'s are':' is'} overdue!</strong> <a href="tracking.html" style="color:#ffb020;text-decoration:underline">View in Tracking →</a>`;
     banner.style.display = 'flex';
   } else {
     banner.style.display = 'none';
@@ -538,9 +552,9 @@ function loadStudentHistory() {
     const active  = logs.filter(l=>!l.returned).length;
     stats.innerHTML = `
       <div class="student-stat"><span>${logs.length}</span>Total Borrows</div>
-      <div class="student-stat"><span style="color:#34d399">${onTime}</span>On Time</div>
-      <div class="student-stat"><span style="color:#f87171">${late}</span>Late</div>
-      <div class="student-stat"><span style="color:#fbbf24">${active}</span>Active</div>
+      <div class="student-stat"><span style="color:#2ee6a8">${onTime}</span>On Time</div>
+      <div class="student-stat"><span style="color:#ff5d7a">${late}</span>Late</div>
+      <div class="student-stat"><span style="color:#ffb020">${active}</span>Active</div>
     `;
   }
 
@@ -631,7 +645,7 @@ function renderRecentDash(items, logs) {
 
   const recentLogs = logs.slice(0,6);
   if (recentLogs.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>No activity yet. <a href="inventory.html" style="color:#14b8a6">Add equipment →</a></p></div>`;
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>No activity yet. <a href="inventory.html" style="color:#1de9d4">Add equipment →</a></p></div>`;
     return;
   }
 
@@ -697,7 +711,7 @@ function updateDonut(total, avail, lost) {
 }
 
 function shake(el) {
-  el.style.borderColor='#f87171'; el.style.animation='none';
+  el.style.borderColor='#ff5d7a'; el.style.animation='none';
   requestAnimationFrame(()=>{ el.style.animation='shake 0.4s ease'; });
   setTimeout(()=>{ el.style.borderColor=''; el.style.animation=''; }, 600);
 }
