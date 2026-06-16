@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — InventorySystem</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body onload="loadDashboard()">
+
+<nav class="navbar">
+  <div class="logo">InventorySystem</div>
+  <ul class="nav-links">
+    <li><a href="dashboard.html" class="active">Dashboard</a></li>
+    <li><a href="inventory.html">Inventory</a></li>
+    <li><a href="tracking.html">Tracking</a></li>
+    <li><a href="login.html">Logout</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <div class="page-header fade-up">
+    <h2>Dashboard <span>Overview</span></h2>
+    <p>Live snapshot of your equipment inventory</p>
+  </div>
+
+  <div class="grid">
+    <div class="stat-card stat-card--total fade-up delay-1">
+      <span class="stat-icon">📦</span>
+      <div class="stat-label">Total Equipment</div>
+      <div class="stat-value" id="totalItems">0</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="totalBar"></div></div>
+    </div>
+
+    <div class="stat-card stat-card--avail fade-up delay-2">
+      <span class="stat-icon">✅</span>
+      <div class="stat-label">Available</div>
+      <div class="stat-value" id="availableItems">0</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="availBar"></div></div>
+    </div>
+
+    <div class="stat-card stat-card--lost fade-up delay-3">
+      <span class="stat-icon">📤</span>
+      <div class="stat-label">Borrowed / Lost</div>
+      <div class="stat-value" id="lostItems">0</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="lostBar"></div></div>
+    </div>
+
+    <div class="stat-card fade-up delay-4" style="--accent-color:#fbbf24">
+      <span class="stat-icon">⏰</span>
+      <div class="stat-label">Overdue Returns</div>
+      <div class="stat-value" id="overdueItems" style="color:#fbbf24">0</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="overdueBar" style="background:#fbbf24"></div></div>
+    </div>
+  </div>
+
+  <div class="dashboard-row">
+    <div class="card fade-up delay-2">
+      <div class="section-title">Status Breakdown</div>
+      <div class="donut-wrap">
+        <svg class="donut-svg" width="130" height="130" viewBox="0 0 130 130" id="donutSvg">
+          <circle cx="65" cy="65" r="50" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="18"/>
+          <circle cx="65" cy="65" r="50" fill="none" stroke="#34d399" stroke-width="18"
+                  stroke-dasharray="0 314" stroke-linecap="round"
+                  transform="rotate(-90 65 65)" id="donutAvail"
+                  style="transition:stroke-dasharray 1.2s cubic-bezier(0.4,0,0.2,1) 0.6s"/>
+          <circle cx="65" cy="65" r="50" fill="none" stroke="#f87171" stroke-width="18"
+                  stroke-dasharray="0 314" stroke-linecap="round"
+                  transform="rotate(-90 65 65)" id="donutLost"
+                  style="transition:stroke-dasharray 1.2s cubic-bezier(0.4,0,0.2,1) 0.9s"/>
+          <text x="65" y="60" text-anchor="middle" fill="white" font-size="20" font-weight="800"
+                font-family="Poppins,sans-serif" id="donutCenter">0</text>
+          <text x="65" y="76" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="10"
+                font-family="Poppins,sans-serif">total</text>
+        </svg>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#34d399"></span>Available
+            <strong id="legendAvail">0</strong>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#f87171"></span>Borrowed
+            <strong id="legendLost">0</strong>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#0d9488"></span>Total
+            <strong id="legendTotal">0</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-up delay-3">
+      <div class="section-title">Recent Activity</div>
+      <div id="recentList"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

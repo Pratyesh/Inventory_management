@@ -3,27 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title>Login — InventorySystem</title>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="center-container">
-
   <div class="card login-card">
 
-    <h2>College Inventory Login</h2>
+    <span class="login-logo">◈</span>
+    <h2>InventorySys</h2>
+    <p class="subtitle">College Equipment Management</p>
 
-    <input type="text" id="username" placeholder="Username">
+    <input type="text" id="username" placeholder="Username" autocomplete="username">
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password"
+           onkeydown="if(event.key==='Enter') login()">
 
-    <input type="password" id="password" placeholder="Password">
-
-    <button onclick="login()">Login</button>
+    <button onclick="login()">Sign In</button>
 
     <p id="error"></p>
 
   </div>
-
 </div>
 
 <script src="script.js"></script>
