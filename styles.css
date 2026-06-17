@@ -1,5 +1,5 @@
 /* ============================================
-   INVENTORYSYS — Design Tokens
+   INVENTORYSYSTEM — Design Tokens
    Palette: Electric Indigo · Vivid Teal · Hot Amber
    ============================================ */
 
@@ -885,6 +885,48 @@ tbody tr:last-child td { border-bottom: none; }
 }
 
 /* ============================================
+   HAMBURGER BUTTON
+   ============================================ */
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: auto;
+  padding: 9px 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-top: 0;
+  flex-shrink: 0;
+  order: 2;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--teal-300);
+  border-radius: 2px;
+  transition: var(--transition);
+  transform-origin: center;
+}
+
+.hamburger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 
@@ -894,20 +936,59 @@ tbody tr:last-child td { border-bottom: none; }
 }
 
 @media (max-width: 768px) {
+  /* — Navbar — */
   .navbar {
-    padding: 0 20px;
+    padding: 0 16px;
     height: auto;
-    padding-top: 14px;
-    padding-bottom: 14px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    min-height: 60px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
   }
 
-  .nav-links { gap: 4px; }
+  .hamburger { display: flex; }
 
-  .stat-value { font-size: 40px; }
+  .nav-right {
+    margin-left: auto;
+    gap: 10px;
+    order: 2;
+  }
 
+  .user-badge { display: none; }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 3px;
+    padding: 10px 0 14px;
+    border-top: 1px solid rgba(6,182,168,0.15);
+    order: 10;
+  }
+
+  .nav-links.open { display: flex; }
+  .nav-links li   { width: 100%; }
+
+  .nav-links a {
+    display: block;
+    padding: 11px 14px;
+    font-size: 14px;
+  }
+
+  /* — Layout — */
+  .container { width: 95%; }
+  .page-header { padding: 22px 0 8px; }
+  .page-header h2 { font-size: 22px; }
+
+  /* — Stat cards — */
+  .stat-value { font-size: 38px; }
+  .stat-card  { padding: 20px 18px; }
+
+  /* — Cards — */
+  .card { padding: 20px 16px; }
+
+  /* — Tables — */
   table, thead, tbody, tr, th, td { display: block; }
   thead { display: none; }
 
@@ -915,17 +996,34 @@ tbody tr:last-child td { border-bottom: none; }
     padding: 10px 14px;
     background: rgba(255,255,255,0.04);
     border-radius: var(--radius-sm);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     border: none;
   }
 
   tr {
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: var(--radius-md);
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     padding: 8px;
     display: block;
   }
+
+  /* — Dashboard donut — */
+  .donut-wrap   { flex-direction: column; align-items: center; gap: 20px; }
+  .donut-legend { flex-direction: row; flex-wrap: wrap; gap: 10px 20px; }
+
+  /* — Modal — */
+  .modal-card { padding: 20px 16px; }
+
+  /* — Overdue banner — */
+  .overdue-banner { padding: 10px 16px; font-size: 13px; }
+}
+
+@media (max-width: 480px) {
+  .grid         { grid-template-columns: 1fr; }
+  .stat-value   { font-size: 30px; }
+  .page-header h2 { font-size: 19px; }
+  .card         { padding: 16px 12px; }
 }
 
 /* ============================================

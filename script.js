@@ -723,3 +723,25 @@ document.addEventListener('click', e => {
     if (m && e.target === m) m.classList.remove('open');
   });
 });
+
+// ── Hamburger menu ────────────────────────────
+function toggleMenu() {
+  const btn = document.getElementById('menuBtn');
+  const nav = document.getElementById('navLinks');
+  if (!btn || !nav) return;
+  const isOpen = btn.classList.toggle('open');
+  nav.classList.toggle('open', isOpen);
+}
+
+// Close nav when a link is tapped, or when clicking outside
+document.addEventListener('click', e => {
+  const btn = document.getElementById('menuBtn');
+  const nav = document.getElementById('navLinks');
+  if (!btn || !nav) return;
+  const clickedOutside = !btn.contains(e.target) && !nav.contains(e.target);
+  const clickedLink   = e.target.closest('.nav-links a');
+  if (clickedOutside || clickedLink) {
+    btn.classList.remove('open');
+    nav.classList.remove('open');
+  }
+});
