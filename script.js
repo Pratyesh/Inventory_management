@@ -18,6 +18,52 @@ function toggleTheme() {
   if (btn) btn.textContent = next === 'dark' ? '☀️' : '🌙';
 }
 
+// ── Mobile nav ────────────────────────────────
+function toggleMobileNav() {
+  const collapse = document.getElementById('navCollapse');
+  const burger   = document.getElementById('hamburgerBtn');
+  if (!collapse) return;
+  collapse.classList.toggle('open');
+  if (burger) burger.classList.toggle('open');
+}
+
+// Close mobile nav when a link inside it is tapped
+document.addEventListener('click', e => {
+  const collapse = document.getElementById('navCollapse');
+  if (!collapse || !collapse.classList.contains('open')) return;
+  if (e.target.tagName === 'A' || e.target.closest('a')) {
+    collapse.classList.remove('open');
+    const burger = document.getElementById('hamburgerBtn');
+    if (burger) burger.classList.remove('open');
+  }
+});
+
+// Re-run the page's main render function whenever the page becomes visible again.
+// This covers two real-world cases the plain `onload` handler misses:
+//  1) Browser back/forward restoring the page from cache (bfcache) without firing `onload`.
+//  2) Data changed in another tab (e.g. borrowed an item on the Inventory tab while
+//     the Dashboard tab was already open) — the `storage` event fires in OTHER tabs
+//     when localStorage changes, so we use it to refresh this tab's view live.
+function refreshCurrentPage() {
+  if (typeof loadDashboard === 'function' && document.getElementById('totalItems')) loadDashboard();
+  if (typeof displayItems   === 'function' && document.getElementById('inventoryBody')) displayItems();
+  if (typeof loadTracking   === 'function' && document.getElementById('activeBody')) loadTracking();
+  if (typeof loadStudentHistory === 'function' && document.getElementById('studentHistoryBody')) loadStudentHistory();
+  if (typeof loadAuditLog   === 'function' && document.getElementById('auditBody')) loadAuditLog();
+}
+
+window.addEventListener('pageshow', e => {
+  // e.persisted is true when restored from bfcache — but we refresh either way,
+  // since a normal load already calls the page's onload handler and re-running is harmless.
+  refreshCurrentPage();
+});
+
+window.addEventListener('storage', e => {
+  if (e.key === 'inventory' || e.key === 'borrowLogs' || e.key === 'auditLog') {
+    refreshCurrentPage();
+  }
+});
+
 // ── Toast ─────────────────────────────────────
 function toast(msg, type = 'success') {
   let wrap = document.getElementById('toastWrap');
@@ -722,26 +768,4 @@ document.addEventListener('click', e => {
     const m = document.getElementById(id);
     if (m && e.target === m) m.classList.remove('open');
   });
-});
-
-// ── Hamburger menu ────────────────────────────
-function toggleMenu() {
-  const btn = document.getElementById('menuBtn');
-  const nav = document.getElementById('navLinks');
-  if (!btn || !nav) return;
-  const isOpen = btn.classList.toggle('open');
-  nav.classList.toggle('open', isOpen);
-}
-
-// Close nav when a link is tapped, or when clicking outside
-document.addEventListener('click', e => {
-  const btn = document.getElementById('menuBtn');
-  const nav = document.getElementById('navLinks');
-  if (!btn || !nav) return;
-  const clickedOutside = !btn.contains(e.target) && !nav.contains(e.target);
-  const clickedLink   = e.target.closest('.nav-links a');
-  if (clickedOutside || clickedLink) {
-    btn.classList.remove('open');
-    nav.classList.remove('open');
-  }
 });
