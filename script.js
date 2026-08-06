@@ -1,9 +1,4 @@
-/* ============================================
-   InventorySys — script.js  v3.0
-   Pure JS / HTML / CSS — no dependencies
-   ============================================ */
 
-// ── Theme ─────────────────────────────────────
 (function initTheme() {
   const t = localStorage.getItem('theme') || 'dark';
   document.documentElement.setAttribute('data-theme', t);
@@ -27,7 +22,7 @@ function toggleMobileNav() {
   if (burger) burger.classList.toggle('open');
 }
 
-// Close mobile nav when a link inside it is tapped
+
 document.addEventListener('click', e => {
   const collapse = document.getElementById('navCollapse');
   if (!collapse || !collapse.classList.contains('open')) return;
@@ -38,12 +33,6 @@ document.addEventListener('click', e => {
   }
 });
 
-// Re-run the page's main render function whenever the page becomes visible again.
-// This covers two real-world cases the plain `onload` handler misses:
-//  1) Browser back/forward restoring the page from cache (bfcache) without firing `onload`.
-//  2) Data changed in another tab (e.g. borrowed an item on the Inventory tab while
-//     the Dashboard tab was already open) — the `storage` event fires in OTHER tabs
-//     when localStorage changes, so we use it to refresh this tab's view live.
 function refreshCurrentPage() {
   if (typeof loadDashboard === 'function' && document.getElementById('totalItems')) loadDashboard();
   if (typeof displayItems   === 'function' && document.getElementById('inventoryBody')) displayItems();
@@ -53,8 +42,7 @@ function refreshCurrentPage() {
 }
 
 window.addEventListener('pageshow', e => {
-  // e.persisted is true when restored from bfcache — but we refresh either way,
-  // since a normal load already calls the page's onload handler and re-running is harmless.
+
   refreshCurrentPage();
 });
 
